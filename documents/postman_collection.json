@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "suraksha-ai-collection",
+		"name": "Suraksha AI - API Collection",
+		"description": "Collection for testing Suraksha AI harassment detection backend.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. System Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						""
+					]
+				},
+				"description": "Check if the API and AI modules are initialized."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Upload Video",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/video/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"video",
+						"upload"
+					]
+				},
+				"description": "Upload a MP4/AVI file to start harassment detection analysis."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Check Processing Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/video/status/{{task_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"video",
+						"status",
+						"{{task_id}}"
+					]
+				},
+				"description": "Check the progress of a previously uploaded video."
+			},
+			"response": []
+		},
+		{
+			"name": "4. List All Incidents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/incidents",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"incidents"
+					]
+				},
+				"description": "Retrieve all detected harassment incidents from the database."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Get Incident Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/incidents/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"incidents",
+						"1"
+					]
+				},
+				"description": "Get detailed breakdown and timestamps for a specific incident."
+			},
+			"response": []
+		},
+		{
+			"name": "6. Download Evidence Clip",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/incidents/1/clip",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"incidents",
+						"1",
+						"clip"
+					]
+				},
+				"description": "Download the forensic MP4 clip of a detected incident."
+			},
+			"response": []
+		},
+		{
+			"name": "7. Live Stream (MJPEG)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/stream",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"stream"
+					]
+				},
+				"description": "Watch the live processed stream with AI overlays in your browser."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "task_id",
+			"value": "your-task-id-here"
+		}
+	]
+}
