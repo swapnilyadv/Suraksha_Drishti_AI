@@ -1,0 +1,71 @@
+# ============================================================
+# Suraksha AI — Model Hyperparameters Configuration
+# ============================================================
+
+# ── Gender Classifier ────────────────────────────────────────
+gender_classifier:
+  backbone: "mobilenet_v2"
+  num_classes: 2                # 0=Male, 1=Female
+  input_size: 224
+  dropout: 0.3
+  learning_rate: 0.0001
+  batch_size: 32
+  epochs: 30
+  early_stopping_patience: 7
+  pretrained: true
+  gender_labels: ["Male", "Female"]
+
+# ── Action Recognizer ────────────────────────────────────────
+action_recognizer:
+  backbone: "resnet18"
+  sequence_length: 16           # Frames per sequence
+  lstm_hidden_size: 256
+  lstm_num_layers: 2
+  num_classes: 8
+  input_size: 112
+  dropout: 0.5
+  learning_rate: 0.0005
+  batch_size: 16
+  epochs: 50
+  early_stopping_patience: 10
+  pretrained: true
+  action_labels:
+    0: "Normal"
+    1: "Pushing"
+    2: "Pulling"
+    3: "Chasing"
+    4: "Hitting"
+    5: "Grabbing"
+    6: "Group Surrounding"
+    7: "Running Behind"
+
+# ── Weapon Detector ──────────────────────────────────────────
+weapon_detector:
+  model_size: "yolov8m"         # nano/small/medium
+  num_classes: 7
+  weapon_labels:
+    0: "Gun"
+    1: "Knife"
+    2: "Pistol"
+    3: "Rifle"
+    4: "Bat"
+    5: "Sharp Object"
+    6: "Metallic Object"
+  input_size: 640
+  learning_rate: 0.001
+  batch_size: 16
+  epochs: 100
+
+# ── DeepSORT Tracker ─────────────────────────────────────────
+tracker:
+  max_age: 30                   # Frames before track is deleted
+  n_init: 3                     # Frames before track is confirmed
+  max_cosine_distance: 0.4
+  nn_budget: 100
+
+# ── Pose Estimator ───────────────────────────────────────────
+pose_estimator:
+  model_complexity: 1           # 0=lite, 1=full, 2=heavy
+  min_detection_confidence: 0.5
+  min_tracking_confidence: 0.5
+  smooth_landmarks: true

@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# Data & Models (Exclude large binaries and private data)
+saved_models/*.pt
+saved_models/*.onnx
+yolov8n.pt
+datasets/
+
+# System Outputs (Private evidence)
+outputs/
+database/*.db
+*.log
+
+# macOS system files
+.DS_Store
+
+# Scratch files
+scratch/
+tests/

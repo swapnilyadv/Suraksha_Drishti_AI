@@ -1,0 +1,69 @@
+# ============================================================
+# Suraksha AI — Women Harassment Detection System
+# Main Configuration File
+# ============================================================
+
+# ── Device ──────────────────────────────────────────────────
+device: "cuda"          # "cuda" | "cpu"
+use_fp16: true          # Half-precision inference (GPU only)
+
+# ── Video Input ──────────────────────────────────────────────
+video:
+  webcam_index: 0
+  rtsp_url: ""
+  frame_skip: 2         # Process every N-th frame (1 = no skip)
+  frame_width: 1280
+  frame_height: 720
+  buffer_seconds: 15    # Seconds of buffer kept for clip saving
+
+# ── Detection Thresholds ─────────────────────────────────────
+detection:
+  person_confidence: 0.5
+  gender_confidence: 0.6
+  weapon_confidence: 0.5
+  action_confidence: 0.55
+  threat_score_suspicious: 0.4
+  threat_score_harassment: 0.1
+
+# ── Behavior Analysis ────────────────────────────────────────
+behavior:
+  unsafe_proximity_pixels: 120    # Distance threshold (pixels)
+  unsafe_proximity_duration: 5.0  # Seconds of proximity to flag
+  stalking_frame_window: 90       # Frames to look back for stalking
+  crowd_male_count: 3             # Min males to trigger crowd alert
+  fast_approach_speed: 15.0       # Pixels/frame
+
+# ── Scoring Weights ──────────────────────────────────────────
+scoring:
+  w_action: 0.80
+  w_behavior: 0.30
+  w_pose: 0.00
+  w_gender: 0.10
+  w_weapon: 0.10
+
+# ── Paths ────────────────────────────────────────────────────
+paths:
+  yolo_weights: "yolov8n.pt"
+  weapon_weights: "saved_models/weapon_detector.pt"
+  gender_weights: "saved_models/gender_classifier.pt"
+  action_weights: "saved_models/action_recognizer.pt"
+  output_dir: "outputs"
+  incidents_dir: "outputs/incidents"
+  screenshots_dir: "outputs/screenshots"
+  clips_dir: "outputs/clips"
+  db_path: "database/incidents.db"
+  log_dir: "logs"
+  alarm_sound: "alerts/sounds/alarm.wav"
+
+# ── API ──────────────────────────────────────────────────────
+api:
+  host: "0.0.0.0"
+  port: 8000
+  max_upload_size_mb: 500
+  allowed_extensions: ["mp4", "avi", "mov", "mkv"]
+
+# ── Logging ──────────────────────────────────────────────────
+logging:
+  level: "DEBUG"           # DEBUG | INFO | WARNING | ERROR
+  max_file_size_mb: 10
+  backup_count: 5

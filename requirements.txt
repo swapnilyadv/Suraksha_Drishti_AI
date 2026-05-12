@@ -1,0 +1,51 @@
+# ============================================================
+# Suraksha AI — Women Harassment Detection System
+# Python Dependencies
+# ============================================================
+# Install with: pip install -r requirements.txt
+# Requires Python 3.11+
+
+# ── Core AI / Computer Vision ────────────────────────────────
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+ultralytics>=8.1.0
+opencv-python>=4.9.0
+mediapipe>=0.10.9
+
+# ── Tracking ─────────────────────────────────────────────────
+deep-sort-realtime>=1.3.2
+
+# ── Data Science ─────────────────────────────────────────────
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+Pillow>=10.0.0
+
+# ── Backend API ──────────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+pydantic>=2.0.0
+
+# ── Database ─────────────────────────────────────────────────
+SQLAlchemy>=2.0.0
+
+# ── Config & Logging ─────────────────────────────────────────
+PyYAML>=6.0.1
+loguru>=0.7.2
+
+# ── Audio Alerts ─────────────────────────────────────────────
+pygame>=2.5.2
+# playsound>=1.3.0
+
+# ── Video Processing ─────────────────────────────────────────
+ffmpeg-python>=0.2.0
+
+# ── Optional / Advanced Features ─────────────────────────────
+# deepface>=0.0.93           # Emotion + face recognition
+# twilio>=8.0.0              # SMS / WhatsApp alerts
+# python-telegram-bot>=20.0  # Telegram alerts
+# librosa>=0.10.0            # Audio scream detection
+# transformers>=4.38.0       # HuggingFace models
