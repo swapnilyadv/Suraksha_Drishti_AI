@@ -19,6 +19,9 @@ logger = get_logger(__name__)
 ACTION_LABELS = {
     0: "Normal",
     1: "Harassment",
+    2: "Weapon",
+    3: "Male Faces",
+    4: "Female Faces",
 }
 
 SEQUENCE_LENGTH = 16    # Number of frames per action window
@@ -59,7 +62,7 @@ class ActionRecognizerModel(nn.Module):
 
     def __init__(
         self,
-        num_classes: int = 2,
+        num_classes: int = 5,
         lstm_hidden: int = 256,
         lstm_layers: int = 2,
         dropout: float = 0.5,
@@ -210,6 +213,9 @@ class ActionRecognizer:
         THREAT_WEIGHTS = {
             "Normal":           0.0,
             "Harassment":       1.0,
+            "Weapon":           1.0,
+            "Male Faces":       0.0,
+            "Female Faces":     0.0,
         }
         w = THREAT_WEIGHTS.get(action_label, 0.0)
         return round(w * confidence, 4)

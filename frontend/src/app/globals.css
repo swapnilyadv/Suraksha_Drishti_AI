@@ -84,3 +84,8 @@ body::before {
   0%, 100% { background: rgba(255,34,68,0.13); }
   50%       { background: rgba(255,34,68,0.06); }
 }
+@keyframes marker-pulse {
+  0%   { transform: rotate(-45deg) scale(1); box-shadow: 0 0 0px var(--danger); }
+  50%  { transform: rotate(-45deg) scale(1.15); box-shadow: 0 0 20px var(--danger); background: #ff2244; }
+  100% { transform: rotate(-45deg) scale(1); box-shadow: 0 0 0px var(--danger); }
+}

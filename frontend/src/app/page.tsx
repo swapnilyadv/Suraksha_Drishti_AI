@@ -26,7 +26,7 @@ export default function Home() {
 
   const { toast, showToast, setToast } = useToast();
   const { cameras, addCamera, removeCamera, updateCamera } = useCameraStore();
-  const { evidence, addEvidence, clearAll }                = useEvidenceStore();
+  const { evidence, addEvidence, clearAll, updateEvidence } = useEvidenceStore();
 
   const [alertCamIds, setAlertCamIds] = useState<Set<string>>(new Set());
 
@@ -43,13 +43,15 @@ export default function Home() {
   }, [alertMsg]);
 
   const handleDetection = useCallback((entry: Parameters<typeof addEvidence>[0] & { cameraId: string }) => {
-    addEvidence(entry);
+    const item = addEvidence(entry);
     setAlertCamIds(prev => new Set(prev).add(entry.cameraId));
     setAlertMsg(`VIOLENCE DETECTED — ${entry.cameraLabel} · ${(entry.confidence * 100).toFixed(0)}% confidence`);
     
     setTimeout(() => {
       setAlertCamIds(prev => { const s = new Set(prev); s.delete(entry.cameraId); return s; });
     }, 15000);
+
+    return item.id;
   }, [addEvidence]);
 
   const handleAlert = useCallback((msg: string) => {
@@ -102,7 +104,8 @@ export default function Home() {
                 />
                 <StatsPanel 
                   isAlert={isAlert} 
-                  incidentCount={evidence.length}
+                  evidence={evidence}
+                  onUpdateEvidence={updateEvidence}
                   cameraCount={cameras.length}
                   activeCameraCount={cameras.filter(c => c.status === "active").length}
                   cameras={cameras}

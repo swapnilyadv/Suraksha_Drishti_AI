@@ -3,16 +3,22 @@ import { useEffect, useState } from "react";
 import { CameraEntry } from "@/hooks/useCameraStore";
 import MiniMap from "./MiniMap";
 
+import LiveIncidentCard from "./LiveIncidentCard";
+import { EvidenceEntry } from "@/hooks/useEvidenceStore";
+
 interface Props {
   isAlert: boolean;
-  incidentCount: number;
+  evidence: EvidenceEntry[];
   cameraCount: number;
   activeCameraCount: number;
   cameras: CameraEntry[];
   alertCamIds: Set<string>;
+  onUpdateEvidence: (id: string, updates: Partial<EvidenceEntry>) => void;
 }
 
-export default function StatsPanel({ isAlert, incidentCount, cameraCount, activeCameraCount, cameras, alertCamIds }: Props) {
+export default function StatsPanel({ isAlert, evidence, cameraCount, activeCameraCount, cameras, alertCamIds, onUpdateEvidence }: Props) {
+  // Filter for active/recent threats
+  const activeIncidents = evidence.slice(0, 10);
   const [sessionStart] = useState(Date.now());
   const [uptime, setUptime] = useState("00:00:00");
   const [memoryUsage, setMemoryUsage] = useState<string>("N/A");
@@ -70,16 +76,25 @@ export default function StatsPanel({ isAlert, incidentCount, cameraCount, active
       </Block>
 
       {/* Real-time Incident Tracker */}
-      <Block label="INCIDENT TRACKING">
-        <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-          <div>
-            <div style={{ fontFamily: "Orbitron,sans-serif", fontSize: 24, fontWeight: 900, color: incidentCount > 0 ? "var(--warning)" : "var(--text-dim)" }}>{incidentCount}</div>
-            <div style={{ ...mono, fontSize: 8, color: "var(--text-dim)" }}>TOTAL DETECTIONS</div>
-          </div>
-        </div>
-        <div style={{ ...mono, fontSize: 9, color: "var(--text-dim)", marginBottom: 4 }}>AI MODEL INTEGRITY: <span style={{ color: "var(--safe)" }}>OPTIMAL</span></div>
-        <div style={{ height: 2, background: "var(--border)", marginBottom: 12 }}>
-          <div style={{ height: "100%", width: "100%", background: "var(--safe)" }}/>
+      <Block label="LIVE INCIDENT TRACKER">
+        <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+          {activeIncidents.length === 0 ? (
+            <div className="py-10 text-center border border-dashed border-zinc-800">
+              <div className="text-zinc-600 text-[10px] font-mono tracking-widest">SYSTEM SECURE</div>
+              <div className="text-zinc-800 text-[8px] font-mono mt-1 uppercase">No active threats detected</div>
+            </div>
+          ) : (
+            activeIncidents.map(inc => (
+              <LiveIncidentCard 
+                key={inc.id} 
+                incident={inc} 
+                onDispatch={(id) => onUpdateEvidence(id, { 
+                  status: "Police Dispatched",
+                  dispatchTime: new Date().toLocaleTimeString()
+                })} 
+              />
+            ))
+          )}
         </div>
       </Block>
 

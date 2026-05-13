@@ -8,9 +8,14 @@ export interface EvidenceEntry {
   timestamp: string;       // human-readable
   isoTime: string;         // ISO for sorting
   confidence: number;
-  type: "VIOLENCE" | "HARASSMENT";
-  thumbnail?: string;      // base64 data-URL of captured frame (small JPEG)
-  // videoUrl is NOT in localStorage — only in-memory (cleared on reload)
+  type: string;            // VIOLENCE, HARASSMENT, WEAPON, etc.
+  thumbnail?: string;      // base64 data-URL
+  maleCount?: number;
+  femaleCount?: number;
+  weaponDetected?: boolean;
+  threatLevel?: "Safe" | "Medium" | "High" | "Critical";
+  status?: "Active" | "Monitoring" | "Resolved" | "Police Dispatched";
+  dispatchTime?: string;
 }
 
 const KEY = "sd_evidence_v2";

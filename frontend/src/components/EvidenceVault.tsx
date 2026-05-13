@@ -105,16 +105,22 @@ export default function EvidenceVault({ evidence, onClearAll }: Props) {
 
                     {/* Meta */}
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5, marginBottom: 10 }}>
-                      {[["Camera ID", ev.cameraId], ["Detected", ev.timestamp]].map(([l, v]) => (
+                      {[
+                        ["Male Count", ev.maleCount ?? 0],
+                        ["Female Count", ev.femaleCount ?? 0],
+                        ["Weapon", ev.weaponDetected ? "DETECTED" : "NONE"],
+                        ["Threat", ev.threatLevel || "High"],
+                        ["Detected", ev.timestamp]
+                      ].map(([l, v]) => (
                         <div key={l} style={{ background: "var(--bg3)", padding: "5px 8px", gridColumn: l === "Detected" ? "span 2" : "auto" }}>
                           <div style={{ ...mono, fontSize: 7, color: "var(--text-dim)", letterSpacing: 1, marginBottom: 2 }}>{l}</div>
-                          <div style={{ ...mono, fontSize: 10, color: "var(--text)" }}>{v}</div>
+                          <div style={{ ...mono, fontSize: 10, color: l === "Weapon" && v === "DETECTED" ? "var(--danger)" : "var(--text)" }}>{v}</div>
                         </div>
                       ))}
                     </div>
 
                     <div style={{ ...mono, fontSize: 10, color: "var(--text-dim)", padding: "6px 10px", background: "var(--bg3)", border: "1px solid var(--border)", lineHeight: 1.5 }}>
-                      ℹ Thumbnail captured at time of detection. Video recording available in session only.
+                      ℹ Incident report generated with {ev.type} status. Metadata captured in real-time.
                     </div>
                   </div>
                 </motion.div>

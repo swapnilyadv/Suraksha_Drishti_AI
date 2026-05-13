@@ -45,7 +45,7 @@ def parse_args():
     p.add_argument("--resume",       action="store_true",              help="Resume from best checkpoint")
     p.add_argument("--patience",     type=int,   default=10,           help="Early stopping patience")
     p.add_argument("--seq-len",      type=int,   default=16,           help="Sequence length (frames)")
-    p.add_argument("--num-classes",  type=int,   default=8,            help="Number of action classes")
+    p.add_argument("--num-classes",  type=int,   default=5,            help="Number of action classes")
     return p.parse_args()
 
 
@@ -53,6 +53,10 @@ def parse_args():
 def train_one_epoch(model, loader, criterion, optimizer, scaler, device) -> dict:
     model.train()
     total_loss, all_preds, all_labels = 0.0, [], []
+
+    if len(loader) == 0:
+        logger.warning("Empty training loader.")
+        return {"loss": 0.0, "accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1": 0.0}
 
     for batch_idx, (seqs, labels) in enumerate(loader):
         seqs   = seqs.to(device)
@@ -81,8 +85,9 @@ def train_one_epoch(model, loader, criterion, optimizer, scaler, device) -> dict
     acc = accuracy_score(all_labels, all_preds)
     prec, rec, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average="weighted", zero_division=0)
 
+    avg_loss = total_loss / len(loader) if len(loader) > 0 else 0.0
     return {
-        "loss":      round(total_loss / len(loader), 4),
+        "loss":      round(avg_loss, 4),
         "accuracy":  round(float(acc),  4),
         "precision": round(float(prec), 4),
         "recall":    round(float(rec),  4),
@@ -94,6 +99,9 @@ def train_one_epoch(model, loader, criterion, optimizer, scaler, device) -> dict
 def evaluate(model, loader, criterion, device) -> dict:
     model.eval()
     total_loss, all_preds, all_labels = 0.0, [], []
+
+    if len(loader) == 0:
+        return {"loss": 0.0, "accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1": 0.0}
 
     for seqs, labels in loader:
         seqs   = seqs.to(device)
@@ -110,8 +118,9 @@ def evaluate(model, loader, criterion, device) -> dict:
     acc = accuracy_score(all_labels, all_preds)
     prec, rec, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average="weighted", zero_division=0)
 
+    avg_loss = total_loss / len(loader) if len(loader) > 0 else 0.0
     return {
-        "loss":      round(total_loss / len(loader), 4),
+        "loss":      round(avg_loss, 4),
         "accuracy":  round(float(acc),  4),
         "precision": round(float(prec), 4),
         "recall":    round(float(rec),  4),

@@ -15,13 +15,15 @@ L.Icon.Default.mergeOptions({
 });
 
 // Custom icons
-function makeIcon(color: string) {
+function makeIcon(color: string, blinking: boolean = false) {
+  const anim = blinking ? 'animation: marker-pulse 1s infinite;' : '';
   return L.divIcon({
     className: "",
     html: `<div style="
       width:28px;height:28px;border-radius:50% 50% 50% 0;
       background:${color};border:2px solid rgba(255,255,255,0.7);
       transform:rotate(-45deg);box-shadow:0 0 12px ${color}88;
+      ${anim}
     "></div>`,
     iconSize: [28, 28],
     iconAnchor: [14, 28],
@@ -72,7 +74,9 @@ export default function MapClient({ cameras, alertCamIds, showToast, onMarkerCli
 
       {validCams.map(cam => {
         const isAlert = alertCamIds.has(cam.id);
-        const icon = isAlert ? iconAlert : cam.type === "webcam" ? iconWebcam : iconCCTV;
+        const iconColor = isAlert ? "#ff2244" : cam.type === "webcam" ? "#00aaff" : "#ffaa00";
+        const icon = makeIcon(iconColor, isAlert);
+        
         return (
           <Marker
             key={cam.id}

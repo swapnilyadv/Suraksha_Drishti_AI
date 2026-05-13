@@ -18,8 +18,14 @@ from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-# Default class mapping (matches action_recognizer.py for binary training)
-BINARY_LABELS = {"normal": 0, "harassment": 1}
+# Class mapping
+ACTION_LABELS = {
+    "normal": 0,
+    "harassment": 1,
+    "weapon": 2,
+    "Male Faces": 3,
+    "Female Faces": 4,
+}
 
 INPUT_SIZE      = 112
 SEQUENCE_LENGTH = 16
@@ -73,10 +79,11 @@ class HarassmentDataset(Dataset):
         )
 
     def _build_sample_list(self) -> None:
-        """Walk the root directory and collect all video file paths with labels."""
+        """Walk the root directory and collect all video and image file paths with labels."""
         VIDEO_EXTS = {".mp4", ".avi", ".mov", ".mkv"}
+        IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
-        for class_name, label in BINARY_LABELS.items():
+        for class_name, label in ACTION_LABELS.items():
             class_dir = os.path.join(self.root, class_name)
             if not os.path.isdir(class_dir):
                 logger.warning(f"Missing class directory: {class_dir}")
@@ -84,24 +91,31 @@ class HarassmentDataset(Dataset):
 
             for fname in os.listdir(class_dir):
                 ext = os.path.splitext(fname)[1].lower()
-                if ext in VIDEO_EXTS:
+                if ext in VIDEO_EXTS or ext in IMAGE_EXTS:
                     self.samples.append((os.path.join(class_dir, fname), label))
 
         if not self.samples:
-            logger.error(
-                f"No video samples found in {self.root}. "
-                "Ensure clips are placed in harassment/ and normal/ subdirectories."
+            logger.warning(
+                f"No samples found in {self.root} for labels {list(ACTION_LABELS.keys())}. "
             )
 
-    def _load_frames(self, video_path: str) -> Optional[List[np.ndarray]]:
+    def _load_frames(self, path: str) -> Optional[List[np.ndarray]]:
         """
-        Sample `sequence_length` evenly-spaced frames from a video file.
+        Sample `sequence_length` frames from a video file OR repeat a static image.
+        """
+        IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+        ext = os.path.splitext(path)[1].lower()
 
-        Returns None if the video cannot be read.
-        """
-        cap = cv2.VideoCapture(video_path)
+        if ext in IMAGE_EXTS:
+            img = cv2.imread(path)
+            if img is None:
+                logger.warning(f"Could not read image: {path}")
+                return None
+            return [img.copy() for _ in range(self.sequence_length)]
+
+        cap = cv2.VideoCapture(path)
         if not cap.isOpened():
-            logger.warning(f"Cannot open video: {video_path}")
+            logger.warning(f"Cannot open video: {path}")
             return None
 
         total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))

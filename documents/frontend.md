@@ -1,69 +1,83 @@
 # 🖥️ SurakshaDrishti Frontend — Tactical Command Center
 
-> **Status**: Production-Ready React Implementation
+> **Status**: Production-Ready React Implementation (High Fidelity)
 > **Framework**: Next.js 15 (App Router)
-> **Refrence**: Based on `documents/suraksaprototype.html`
+> **Platform**: Client-Side Tactical Surveillance Suite
 
 ---
 
 ## 🚀 Tech Stack
 *   **Core**: Next.js 15, TypeScript, React 19.
-*   **Styling**: Tailwind CSS + Custom Design System (glowing borders, glassmorphism).
-*   **Animations**: Framer Motion (page transitions, alert flashing, map pulses).
-*   **AI Inference**: ONNX Runtime Web (to run the harassment model in-browser).
-*   **Icons**: Lucide React.
+*   **Styling**: Vanilla CSS + Tailwind (Tactical Design System).
+*   **Animations**: Framer Motion (Page transitions, alert pulses, dynamic HUD).
+*   **Maps**: Leaflet.js + React-Leaflet (Real-world OpenStreetMap integration).
+*   **State**: Custom Hooks with `localStorage` persistence (`useCameraStore`, `useEvidenceStore`).
+*   **Media**: Browser `MediaDevices` API for real-time webcam streams.
 
 ---
 
-## 🎨 Design System (globals.css)
-The frontend uses a custom tactical theme inspired by modern surveillance HUDs:
-*   **Primary Background**: `#050810` (Deep Space Blue)
-*   **Accent Color**: `#00aaff` (Tactical Cyan)
-*   **Danger Color**: `#ff2244` (Alert Red)
-*   **Safe Color**: `#00ff88` (Status Green)
-*   **Overlay**: Real-time scanline/CRT effect using CSS gradients.
+## 🎨 Design System
+The frontend uses a custom tactical HUD theme inspired by premium surveillance systems:
+*   **Colors**: 
+    *   `#050810` (Deep Space Blue) — Core UI background.
+    *   `#00aaff` (Tactical Cyan) — Primary active components.
+    *   `#ff2244` (Alert Red) — Critical violence detections.
+    *   `#00ff88` (Status Green) — Secure system state.
+*   **Effects**: Glassmorphism, CSS Scanlines (CRT effect), and CSS Glowing Borders.
 
 ---
 
-## 🧩 Component Architecture
+## 🧩 Core Architecture & Features
 
-### 1. 🛡️ Login System (`LoginScreen.tsx`)
-*   **Feature**: Multi-role authentication (Admin / Officer).
-*   **Visuals**: Animated bracket boxes and grid backgrounds.
-*   **Creds**: 
-    *   `ADMIN_001` / `admin@123`
-    *   `OFFICER_1` / `police@456`
+### 1. 📡 Intelligence Dashboard (`Dashboard`)
+*   **Camera Grid**: Dynamic rendering of active streams. Supports **Webcam** (Real device camera) and **CCTV** (MJPEG/HLS URL streams).
+*   **Stats Panel**: 100% Real-time metrics. Tracks actual **JS Memory Heap**, **Session Uptime**, and **Persistence Stats**.
+*   **Tactical Mini-Map**: A permanent map preview in the sidebar showing real-time GPS locations of all connected nodes.
 
-### 2. 📡 Intelligence Dashboard (`CameraGrid.tsx` & `StatsPanel.tsx`)
-*   **Live Webcam (CAM-01)**: Uses `navigator.mediaDevices` for real-time local monitoring.
-*   **Simulation (CAM-02/03)**: Custom `<canvas>` engine that generates tactical noise and fake detections.
-*   **Metrics**: Real-time incident counts, AI model confidence meters, and event logs.
+### 2. 📍 Live Tactical Map (`MapClient`)
+*   **Real-World Tracking**: Uses **Leaflet.js** to map cameras to actual GPS coordinates.
+*   **Moving Target**: Webcams use high-accuracy `watchPosition` to follow the user/laptop on the map in real-time.
+*   **Big Screen Mode**: Clicking a map marker opens a full-screen high-fidelity live feed of that camera.
 
-### 3. 📹 Evidence Vault (`EvidenceVault.tsx`)
-*   **Cards**: Individual cards for each recorded incident.
-*   **Actions**: Verify, Dispatch Police, or Reject evidence.
-*   **Indicators**: Visual "Confidence Bars" and GPS coordinate tags.
+### 3. 🔍 Evidence Vault (`EvidenceVault`)
+*   **Real Detections Only**: No simulated data. Displays actual motion/violence detections captured from live feeds.
+*   **Memory Efficiency**: Thumbnails are handled in-memory; metadata is persisted in `localStorage`.
+*   **Clear All**: One-click wipe to reset storage and clear system memory.
 
-### 4. 🗺️ Tactical Live Map (`LiveMap.tsx`)
-*   **Visuals**: Custom SVG floorplan with pulsing camera nodes.
-*   **Dispatch**: Interactive "Dispatch Unit" feature that draws a vector line from the station to the alert camera.
-*   **Registry**: Sidebar showing the status of all camera IDs in the network.
+### 4. 📊 Intelligence Analysis (`Analysis`)
+*   **Data Trends**: SVG-based graphing of incident detection spikes over a 7-hour rolling window.
+*   **Category Split**: Percentage breakdown of Violence vs. Harassment vs. System Events.
+*   **Infrastructure Health**: Real monitoring of **LocalStorage utilization** and Camera connectivity uptime.
 
-### 5. ⚙️ Admin Control (`AdminPanel.tsx`)
-*   **Toggles**: Real-time control for AI modules (Violence Detection, Pose Estimation, etc.).
-*   **Logs**: System-level debugging log (Auth events, boot sequences, model status).
-
----
-
-## ⚠️ Alert & Notification System
-*   **Alert Banner**: Flashes across the top when violence is detected.
-*   **Audio Alert**: High-frequency tactical beep that triggers during an active incident.
-*   **Toast System**: Minimalist notifications for user actions (e.g., "Unit Dispatched").
+### 5. 🛠️ Camera Management (`Manage`)
+*   **Full CRUD**: Add, Edit, or Delete camera configurations.
+*   **GPS Automation**: 
+    - **Webcam**: Auto-detects device GPS.
+    - **CCTV**: Fetches approximate coordinates via IP-Geolocation (using `ip-api`).
+*   **Hardware Guard**: Logic to prevent multiple webcam registrations, protecting system resources.
 
 ---
 
-## 🏃 How to Run
-1.  Navigate to the directory: `cd frontend`
-2.  Install packages: `npm install`
-3.  Launch: `npm run dev`
-4.  URL: `http://localhost:3000`
+## 💾 Data Persistence
+The system is fully standalone and persists configuration via the browser's `localStorage` API:
+*   `sd-cameras`: Stores the registry of all added devices and their GPS coords.
+*   `sd-evidence`: Stores the log of all security incidents.
+*   `sd-ai-modules`: Persists toggle states for different AI detection models.
+
+---
+
+## 🚦 System Roles
+*   **ADMIN**: Full access to settings, camera management, and clear-all functions.
+*   **OFFICER**: Monitor-only access to dashboard and live map.
+
+---
+
+## 🛠️ How to Run
+```bash
+# Install dependencies
+npm install
+
+# Run tactical command center
+npm run dev
+```
+Open **[http://localhost:3000](http://localhost:3000)** to access the interface.

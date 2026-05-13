@@ -12,7 +12,7 @@ interface Props {
   alertCamIds: Set<string>;
   onAddCamera: (cam: Omit<CameraEntry, "id" | "addedAt">) => void;
   onRemoveCamera: (id: string) => void;
-  onDetection: (entry: Omit<EvidenceEntry, "id">) => void;
+  onDetection: (entry: Omit<EvidenceEntry, "id">) => any;
   onAlert: (msg: string) => void;
 }
 
@@ -83,6 +83,7 @@ export default function CameraGrid({ cameras, alertCamIds, onAddCamera, onRemove
       <AnimatePresence>
         {showModal && (
           <AddCameraModal
+            hasWebcam={cameras.some(c => c.type === "webcam")}
             onAdd={cam => onAddCamera({ ...cam, status: "active" })}
             onClose={() => setShowModal(false)}
           />
